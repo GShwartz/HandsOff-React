@@ -1,0 +1,6 @@
+{
+  "short_name": "HandsOff",
+  "name": "Command & Control",
+  "start_url": ".",
+  "display": "standalone"
+}
