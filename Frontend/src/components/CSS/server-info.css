@@ -1,0 +1,27 @@
+.server-info {
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.server-info-table {
+    width: 20%; /* Increase the width to stretch the table more */
+    border-collapse: collapse;
+}
+
+.server-info-table th,
+.server-info-table td {
+    padding: 5px 10px; /* Reduce padding to decrease row height */
+    border: 1px solid #3f3434;
+    text-align: center;
+    font-size: 14px; /* Optional: Adjust font size to match the reduced padding */
+}
+
+.server-info-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    border-bottom: 2px solid #ccc;
+}

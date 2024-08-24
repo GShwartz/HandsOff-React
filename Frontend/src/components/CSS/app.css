@@ -1,0 +1,130 @@
+/* Define CSS variables for colors */
+:root {
+  --color-background-body: #f5f5f5;
+  --color-text-body: #333;
+  --color-background-app: #121022ce;
+  --color-box-shadow: rgba(0, 0, 0, 0.1);
+  --color-border: #6f806f;
+  --color-background-gradient: linear-gradient(180deg, #4e4a4a 0%, #817f7f 50%);
+  --color-text-paragraph: #444;
+  --color-text-muted: #777;
+  --color-link: #1a73e8;
+  --color-link-hover: #1a73e8;
+  --color-button-primary: #1a73e8;
+  --color-button-primary-hover: #155db2;
+}
+
+/* General Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  font-family: 'Arial', sans-serif;
+  background-color: var(--color-background-body);
+  color: var(--color-text-body);
+  overflow-x: hidden;
+}
+
+/* App Container */
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  padding: 20px;
+  background-color: var(--color-background-app);
+  box-shadow: 0 0 10px var(--color-box-shadow);
+  overflow-y: auto;
+}
+
+/* Topnav Container */
+.topnav-container {
+  border: 2px solid var(--color-border);
+  background: var(--color-background-gradient);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 80px;
+  max-height: 200px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px var(--color-box-shadow);
+  margin-bottom: 20px;
+}
+
+/* Server Information Container */
+.server-information-container {
+  border: 2px solid var(--color-border);
+  background: var(--color-background-gradient);
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  height: 70px;
+  max-height: 200px;
+  border-radius: 5px;
+  box-shadow: 0 0 15px var(--color-box-shadow);
+}
+
+/* Typography */
+p {
+  text-align: center;
+  font-size: 11px;
+  color: var(--color-text-paragraph);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Professional Styling for Links */
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+/* Button Styles */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--color-button-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-button-primary-hover);
+}

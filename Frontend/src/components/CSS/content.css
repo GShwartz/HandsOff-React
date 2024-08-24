@@ -1,0 +1,224 @@
+/* Define CSS variables for colors */
+:root {
+  --color-border: #6f806f;
+  --color-dropdown-background: linear-gradient(0deg, #161111 0%, #302626 50%);
+  --color-background-gradient: linear-gradient(180deg, #4e4a4a 0%, #817f7f 50%);
+  --color-box-shadow: rgba(0, 0, 0, 0.1);
+  --color-headline-text: #b2cdd8;
+  --color-slider-background: #13afec;
+  --color-slider-font: #e9e1e1;
+  --color-slider-arrow: white;
+}
+
+/* Base content container */
+.content-container {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+
+/* Left container */
+.left-container {
+  flex: 2;
+  border: 2px solid var(--color-border);
+  background: var(--color-background-gradient);
+  margin-right: 20px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  max-height: 500px;
+  border-radius: 5px;
+  box-shadow: 0 0 15px var(--color-box-shadow);
+  overflow-y: auto; /* Allow vertical scrolling */
+  overflow-x: hidden;
+  padding-right: 20px; /* Add padding to leave space for the scrollbar */
+}
+
+/* Right container */
+.right-container {
+  flex: 3.2;
+  border: 2px solid var(--color-border);
+  background: var(--color-background-gradient);
+  border-radius: 5px;
+  box-shadow: 0 0 15px var(--color-box-shadow);
+  overflow-y: auto; 
+  overflow-x: hidden;
+  position: relative; /* Required for positioning arrows */
+  padding-right: 20px; /* Add padding to leave space for the scrollbar */
+}
+
+/* Right container table styles */
+.right-container-table {
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px var(--color-box-shadow);
+  overflow-x: auto;
+}
+
+.connected-stations-table-right {
+  width: 95%; /* Adjust the width to be slightly smaller */
+  margin: 5px auto; /* Center the table within the container */
+  border-collapse: collapse;
+  font-family: 'Arial', sans-serif;
+  font-size: 12px;
+  padding: 10px; /* Add padding inside the table cells if needed */
+}
+
+/* Updated styling for the image slider */
+.image-slider-container {
+  margin-top: 20px;
+  background: var(--color-background-gradient);
+  border-radius: 10px;
+  box-shadow: 0 0 15px var(--color-box-shadow);
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.image-slider {
+  display: flex;
+  justify-content: left; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: 100%; /* Make sure the slider takes full height */
+  transition: transform 0.5s ease-in-out; /* Smooth sliding transition */
+}
+
+.image-slider img {
+  max-height: 150px; /* Adjust height as needed */
+  max-width: 300px;
+  margin: 0 10px; /* Space between images */
+  border-radius: 10px;
+  box-shadow: 0 0 10px var(--color-box-shadow);
+  flex-shrink: 0; /* Prevent images from shrinking */
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), /* Smooth and natural easing */
+              box-shadow 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+              filter 0.7s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+.image-slider img:hover {
+  transform: scale(1.05); /* Slightly enlarge the image */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Add a deeper shadow on hover */
+  filter: brightness(1.1); /* Increase brightness slightly */
+}
+
+.no-images-message {
+  font-size: 16px;  /* Adjust the font size as needed */
+  height: 150px;
+  color: var(--color-slider-font);
+  margin-left: 50vh;
+  text-align: center;
+  align-content: center;
+}
+
+/* Navigation arrows */
+.arrow {
+  position: absolute;
+  height: 100px;
+  width: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  color: var(--color-slider-arrow);
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 3;
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.arrow.left {
+  left: 10px;
+}
+
+.arrow.right {
+  right: 10px;
+}
+
+.arrow:hover {
+  background-color: rgba(0, 0, 0, 0.7); /* Darken on hover */
+}
+
+.arrow.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Consolidated Dropdown Styles */
+.action-dropdown {
+  position: relative;
+  display: inline-block;
+
+}
+
+.action-button {
+  background-color: var(--color-action-button-background);
+  color: var(--color-dropdown-text);
+  padding: 4px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.action-button:hover,
+.action-button:focus {
+  background-color: var(--color-action-button-hover);
+  outline: none;
+}
+
+.action-dropdown-menu {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  background-color: var(--color-dropdown-background);
+  border-radius: 5px;
+  box-shadow: 0 10px 20px var(--color-dropdown-shadow);
+  z-index: 5;
+  list-style-type: none;
+  padding: 12px 0;
+  margin: 0;
+  top: 0;
+  left: -100%;  /* Position the dropdown to the left of the action button */
+  transform: translateX(-10px); /* Offset the dropdown slightly to the left */
+  transition: visibility 0.3s, opacity 0.3s ease, transform 0.3s ease;
+
+}
+
+.action-dropdown-menu.show {
+  visibility: visible;
+  opacity: 0.8;
+  transform: translateX(0);
+}
+
+.dropdown-item {
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  text-align: center;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  color: var(--color-dropdown-text);
+  font-size: 0.95rem;
+  font-family: 'Arial', sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background: var(--color-dropdown-hover-background);
+  color: var(--color-dropdown-hover-text);
+}
+
+.no-selection-message {
+  padding: 20px;
+  color: var(--color-headline-text);
+  font-size: 1.2rem;
+  text-align: center;
+  background: var(--color-background-gradient);
+  border: 2px solid var(--color-border);
+  border-radius: 5px;
+  box-shadow: 0 0 15px var(--color-box-shadow);
+}
