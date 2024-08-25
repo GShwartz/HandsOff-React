@@ -108,10 +108,10 @@ function Content({ endpoints }) {
 
     const handleRowClick = useCallback((endpoint) => {
         const isChecked = !!checkedRows[endpoint.client_mac];
-
+    
         if (chosenRow?.client_mac === endpoint.client_mac) {
             const clearShellData = { message: 'clear_shell' };
-
+    
             sendSelectedRowToBackend(clearShellData).then(() => {
                 resetAllStatesExceptRow();
                 setChosenRow(null); // Clear chosen row
@@ -120,20 +120,21 @@ function Content({ endpoints }) {
             });
             return;
         }
-
+    
         const rowDataWithCheckbox = {
             ...endpoint,
             checked: isChecked
         };
-
+    
         setChosenRow(rowDataWithCheckbox);
-
+    
         sendSelectedRowToBackend(rowDataWithCheckbox).catch((error) => {
             if (lastChosenRowRef.current?.client_mac !== endpoint.client_mac) {
                 setChosenRow(lastChosenRowRef.current);
             }
         });
     }, [chosenRow, resetAllStatesExceptRow, checkedRows, setChosenRow]);
+    
 
     const handleImageClick = (src) => {
         setModalImage(src);
@@ -180,9 +181,7 @@ function Content({ endpoints }) {
                                 />
                             ))
                         ) : (
-                            <div className='image-slider'>
-                                <p className="no-images-message">No images available</p>
-                            </div>
+                            <div className='image-slider'></div>
                         )}
                     </div>
                     <button

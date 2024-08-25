@@ -35,14 +35,12 @@ function App() {
     return (
         <div className="App">
             <Topnav />
-            <div className="server-information-container">
                 <ServerInfo 
                     servingOn={servingOn}
                     bootTime={bootTime} 
                     serverVersion={serverVersion}
                     connectedStations={connectedStations} 
                 />
-            </div>
             <Content endpoints={endpoints} />
         </div>
     );
