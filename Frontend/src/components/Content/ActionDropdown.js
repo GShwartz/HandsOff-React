@@ -52,35 +52,36 @@ const ActionDropdown = ({ index, endpoint, chosenRow, setChosenRow, onDropdownTo
 
   const handleActionClick = async (action) => {
     try {
-      if (action === 'screenshot') {
-        setIsScreenshotAction(true); // Track that screenshot was triggered
-      }
-
-      await sendRequestToBackend(
-        'http://handsoff.home.lab:8000/control',
-        'POST',
-        { action, endpoint: chosenRow },
-        action,
-        setIsModalVisible
-      );
-      console.log(`${action} action sent successfully`);
-
-      // Refresh images if screenshot was taken
-      if (action === 'screenshot') {
-        if (typeof refreshImages === 'function') {
-          refreshImages(); // Call the function correctly
-        } else {
-          console.error("refreshImages is not a function");
+        if (action === 'screenshot') {
+            setIsScreenshotAction(true); // Track that screenshot was triggered
         }
-      }
+
+        await sendRequestToBackend(
+            'http://handsoff.home.lab:8000/control',
+            'POST',
+            { action, endpoint: chosenRow }, // Use the latest chosenRow
+            action,
+            setIsModalVisible
+        );
+        console.log(`${action} action sent successfully`);
+
+        // Refresh images if screenshot was taken
+        if (action === 'screenshot') {
+            if (typeof refreshImages === 'function') {
+                refreshImages(); // Call the function correctly
+            } else {
+                console.error("refreshImages is not a function");
+            }
+        }
 
     } catch (error) {
-      console.error(`Failed to send ${action} action to backend:`, error);
+        console.error(`Failed to send ${action} action to backend:`, error);
     } finally {
-      setDropdownOpenIndex(null); // Close dropdown after action is processed
-      onDropdownToggle(false);
+        setDropdownOpenIndex(null); // Close dropdown after action is processed
+        onDropdownToggle(false);
     }
-  };
+};
+
 
   // Function to handle the modal close and refresh the page
   const handleModalClose = () => {
