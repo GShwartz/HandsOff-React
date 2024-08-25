@@ -1,271 +1,209 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { throttle } from 'lodash';
-import LazyImage from '../components/Content/LazyImage';
-import LeftTable from '../components/Content/LeftTable';
-import RightTable from '../components/Content/RightTable';
-import ImageModal from '../components/Content/ImageModal';
-import "../components/CSS/content.css";
-import "../components/CSS/tables.css";
+import { useRowSelection } from './Content/useRowSelection';
+import LazyImage from './Content/LazyImage';
+import LeftTable from './Content/LeftTable';
+import RightTable from './Content/RightTable';
+import ImageModal from './Content/ImageModal';
+import { sendSelectedRowToBackend, fetchFilesForEndpoint } from './api';
+
+import "./CSS/content.css";
+import "./CSS/tables.css";
 
 const fileCache = {};
 
 function Content({ endpoints }) {
-  const [chosenRow, setChosenRow] = useState(null);
-  const lastChosenRowRef = useRef(null); // Track the last successfully chosen row
-  const [checkedRows, setCheckedRows] = useState({});
-  const [selectAllChecked, setSelectAllChecked] = useState(false);
-  const [images, setImages] = useState([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [maxVisibleImages, setMaxVisibleImages] = useState(0);
-  const [modalImage, setModalImage] = useState(null);
-  const sliderRef = useRef(null);
+    const {
+        chosenRow,
+        setChosenRow,
+        checkedRows,
+        selectAllChecked,
+        handleCheckboxChange,
+        handleSelectAllChange,
+    } = useRowSelection(endpoints);
 
-  const resetAllStates = useCallback(() => {
-    setChosenRow(null);
-    setCheckedRows({});
-    setSelectAllChecked(false);
-    setImages([]);
-    setCurrentSlide(0);
-    setMaxVisibleImages(0);
-    setModalImage(null);
-  }, []);
+    const [images, setImages] = useState([]);
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const [maxVisibleImages, setMaxVisibleImages] = useState(0);
+    const [modalImage, setModalImage] = useState(null);
+    const sliderRef = useRef(null);
+    const lastChosenRowRef = useRef(null);
 
-  const sendSelectedRowToBackend = useCallback(async (endpoint) => {
-    try {
-      const response = await fetch('http://handsoff.home.lab:8000/shell_data', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(endpoint),
-      });
+    const resetAllStatesExceptRow = useCallback(() => {
+        setImages([]);  // Reset images
+        setCurrentSlide(0);
+        setMaxVisibleImages(0);
+        setModalImage(null);
+    }, []);
 
-      if (!response.ok) {
-        throw new Error('Failed to update shell_data on the backend');
-      }
+    const refreshImages = useCallback(() => {
+        if (chosenRow) {
+            fetchFilesForEndpoint(chosenRow.ident)
+                .then(fetchedImages => {
+                    const existingImages = fileCache[chosenRow.ident] || [];
+                    const newImages = fetchedImages.filter(img => !existingImages.includes(img)); // Avoid duplicates
 
-      const data = await response.json();
-      console.log("Backend Shell Data:", data);
+                    const updatedImages = [...newImages.reverse(), ...existingImages]; // Prepend new images and reverse
+                    fileCache[chosenRow.ident] = updatedImages; // Update the cache
+                    setImages(updatedImages);
+                    setCurrentSlide(0); // Reset to the first slide (newest image)
+                })
+                .catch(error => resetAllStatesExceptRow());
+        } else {
+            resetAllStatesExceptRow();
+        }
+    }, [chosenRow, resetAllStatesExceptRow]);
 
-      // Update the last chosen row only if the backend call is successful
-      lastChosenRowRef.current = endpoint;
+    useEffect(() => {
+        refreshImages(); // Initial load of images
+    }, [chosenRow, refreshImages]);
 
-      return data;
+    const calculateVisibleImages = useCallback(() => {
+        if (sliderRef.current) {
+            const sliderWidth = sliderRef.current.clientWidth;
+            const imageWidth = sliderRef.current.querySelector('img')?.clientWidth || 0;
+            const visibleImages = imageWidth > 0 ? Math.floor(sliderWidth / imageWidth) : 0;
+            setMaxVisibleImages(visibleImages);
+        }
+    }, []);
 
-    } catch (error) {
-      console.error("Error sending selected row to backend:", error);
-      throw error; // Rethrow error for further handling
-    }
-  }, []);
+    useEffect(() => {
+        if (images.length > 0) {
+            calculateVisibleImages();  // Recalculate when images are updated
+        }
+    }, [images, calculateVisibleImages]);
 
-  const fetchFilesForEndpoint = useCallback(async (ident) => {
-    if (fileCache[ident]) {
-      setImages(fileCache[ident]);
-      setCurrentSlide(0);
-      return;
-    }
+    useEffect(() => {
+        const throttledResize = throttle(calculateVisibleImages, 200);
+        window.addEventListener('resize', throttledResize);
+        return () => window.removeEventListener('resize', throttledResize);
+    }, [calculateVisibleImages]);
 
-    try {
-      const response = await fetch(`http://handsoff.home.lab:8000/get_files?directory=${ident}`);
-      const fileData = await response.json();
-      fileCache[ident] = fileData.images || [];
-      setImages(fileCache[ident]);
-      setCurrentSlide(0);
-    } catch (error) {
-      console.error("Error fetching files:", error);
-      resetAllStates();
-    }
-  }, [resetAllStates]);
+    useEffect(() => {
+        if (sliderRef.current) {
+            const imageWidth = sliderRef.current.querySelector('img')?.clientWidth || 0;
+            sliderRef.current.style.transform = `translateX(-${currentSlide * imageWidth}px)`;
+        }
+    }, [currentSlide, images]);
 
-  useEffect(() => {
-    resetAllStates();
-  }, [resetAllStates]);
+    const handleNextSlide = useCallback(() => {
+        if (currentSlide < images.length - maxVisibleImages) {
+            setCurrentSlide((prevSlide) => prevSlide + 1);
+        }
+    }, [currentSlide, images.length, maxVisibleImages]);
 
-  useEffect(() => {
-    if (chosenRow) {
-      fetchFilesForEndpoint(chosenRow.ident);
-    } else {
-      resetAllStates();
-    }
-  }, [chosenRow, fetchFilesForEndpoint, resetAllStates]);
+    const handlePrevSlide = useCallback(() => {
+        if (currentSlide > 0) {
+            setCurrentSlide((prevSlide) => prevSlide - 1);
+        }
+    }, [currentSlide]);
 
-  const calculateVisibleImages = useCallback(() => {
-    if (sliderRef.current) {
-      const sliderWidth = sliderRef.current.clientWidth;
-      const imageWidth = sliderRef.current.querySelector('img')?.clientWidth || 0;
-      const visibleImages = imageWidth > 0 ? Math.floor(sliderWidth / imageWidth) : 0;
-      setMaxVisibleImages(visibleImages);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (images.length > 0) {
-      calculateVisibleImages();
-    }
-  }, [images.length, calculateVisibleImages]);
-
-  useEffect(() => {
-    const throttledResize = throttle(calculateVisibleImages, 200);
-    window.addEventListener('resize', throttledResize);
-    return () => window.removeEventListener('resize', throttledResize);
-  }, [calculateVisibleImages]);
-
-  useEffect(() => {
-    if (sliderRef.current) {
-      const imageWidth = sliderRef.current.querySelector('img')?.clientWidth || 0;
-      sliderRef.current.style.transform = `translateX(-${currentSlide * imageWidth}px)`;
-    }
-  }, [currentSlide, images]);
-
-  const handleNextSlide = useCallback(() => {
-    if (currentSlide < images.length - maxVisibleImages) {
-      setCurrentSlide((prevSlide) => prevSlide + 1);
-    }
-  }, [currentSlide, images.length, maxVisibleImages]);
-
-  const handlePrevSlide = useCallback(() => {
-    if (currentSlide > 0) {
-      setCurrentSlide((prevSlide) => prevSlide - 1);
-    }
-  }, [currentSlide]);
-
-  useEffect(() => {
-    if (images.length === 0) {
-      setCurrentSlide(0);
-    } else if (currentSlide >= images.length) {
-      setCurrentSlide(images.length - 1);
-    }
-  }, [images, currentSlide]);
+    useEffect(() => {
+        if (images.length === 0) {
+            setCurrentSlide(0);
+        } else if (currentSlide >= images.length) {
+            setCurrentSlide(images.length - 1);
+        }
+    }, [images, currentSlide]);
 
     const handleRowClick = useCallback((endpoint) => {
-      const isChecked = !!checkedRows[endpoint.client_mac]; // Get the current checkbox state
-      
-      if (chosenRow?.client_mac === endpoint.client_mac) {
-          // Send 'clear_shell' message to backend when unselecting a row
-          const clearShellData = {
-              row: 'clear_shell'
-          };
+        const isChecked = !!checkedRows[endpoint.client_mac];
 
-          sendSelectedRowToBackend(clearShellData).then(() => {
-              resetAllStates();
-          }).catch((error) => {
-              console.error("Error sending 'clear_shell' to backend:", error);
-          });
-          return;
-      }
+        if (chosenRow?.client_mac === endpoint.client_mac) {
+            const clearShellData = { message: 'clear_shell' };
 
-      const rowDataWithCheckbox = {
-          ...endpoint,
-          checked: isChecked
-      };
+            sendSelectedRowToBackend(clearShellData).then(() => {
+                resetAllStatesExceptRow();
+                setChosenRow(null); // Clear chosen row
+            }).catch((error) => {
+                console.error("Error sending 'clear_shell' to backend:", error);
+            });
+            return;
+        }
 
-      // Optimistically update the UI immediately
-      setChosenRow(rowDataWithCheckbox);
+        const rowDataWithCheckbox = {
+            ...endpoint,
+            checked: isChecked
+        };
 
-      sendSelectedRowToBackend(rowDataWithCheckbox).catch((error) => {
-          if (lastChosenRowRef.current?.client_mac !== endpoint.client_mac) {
-              setChosenRow(lastChosenRowRef.current);
-          }
-      });
-  }, [chosenRow, sendSelectedRowToBackend, resetAllStates, checkedRows]);
+        setChosenRow(rowDataWithCheckbox);
 
-  const handleCheckboxChange = useCallback((endpoint) => {
-    setCheckedRows((prevCheckedRows) => {
-      const newCheckedRows = {
-        ...prevCheckedRows,
-        [endpoint.client_mac]: !prevCheckedRows[endpoint.client_mac],
-      };
+        sendSelectedRowToBackend(rowDataWithCheckbox).catch((error) => {
+            if (lastChosenRowRef.current?.client_mac !== endpoint.client_mac) {
+                setChosenRow(lastChosenRowRef.current);
+            }
+        });
+    }, [chosenRow, resetAllStatesExceptRow, checkedRows, setChosenRow]);
 
-      setSelectAllChecked(
-        Object.keys(newCheckedRows).length === endpoints.length &&
-        Object.values(newCheckedRows).every((checked) => checked)
-      );
+    const handleImageClick = (src) => {
+        setModalImage(src);
+    };
 
-      return newCheckedRows;
-    });
-  }, [endpoints]);
+    const handleCloseModal = () => {
+        setModalImage(null);
+    };
 
-  const handleSelectAllChange = useCallback(() => {
-    const newCheckedState = !selectAllChecked;
-    setSelectAllChecked(newCheckedState);
-
-    const newCheckedRows = {};
-    endpoints.forEach(endpoint => {
-      newCheckedRows[endpoint.client_mac] = newCheckedState;
-    });
-    setCheckedRows(newCheckedRows);
-  }, [endpoints, selectAllChecked]);
-
-  const isRowChecked = (endpoint) => !!checkedRows[endpoint.client_mac];
-
-  const handleImageClick = (src) => {
-    setModalImage(src);
-  };
-
-  const handleCloseModal = () => {
-    setModalImage(null);
-  };
-
-  return (
-    <div className="content-container">
-      <div className="left-container">
-        <LeftTable
-          endpoints={endpoints}
-          chosenRow={chosenRow}
-          setChosenRow={setChosenRow}
-          handleRowClick={handleRowClick}
-          handleCheckboxChange={handleCheckboxChange}
-          isRowChecked={isRowChecked}
-          handleSelectAllChange={handleSelectAllChange}
-          selectAllChecked={selectAllChecked}
-        />
-      </div>
-
-      <div className="right-container">
-        <RightTable chosenRow={chosenRow} />
-        <div className="image-slider-container">
-          <button 
-            className={`arrow left ${currentSlide === 0 ? 'disabled' : ''}`}
-            onClick={handlePrevSlide}
-            disabled={currentSlide === 0}
-          >
-            &#9664;
-          </button>
-          <div className="image-slider" ref={sliderRef}>
-            {images.length > 0 ? (
-              images.map((imgSrc, index) => (
-                <LazyImage 
-                  key={index} 
-                  src={imgSrc} 
-                  alt={`Slide ${index + 1}`} 
-                  onClick={() => handleImageClick(imgSrc)} // Open modal on image click
+    return (
+        <div className="content-container">
+            <div className="left-container">
+                <LeftTable
+                    endpoints={endpoints}
+                    chosenRow={chosenRow}
+                    setChosenRow={setChosenRow}
+                    handleRowClick={handleRowClick}
+                    handleCheckboxChange={handleCheckboxChange}
+                    isRowChecked={(endpoint) => !!checkedRows[endpoint.client_mac]}
+                    handleSelectAllChange={handleSelectAllChange}
+                    selectAllChecked={selectAllChecked}
+                    refreshImages={refreshImages} // Pass refreshImages down to the LeftTable component
                 />
-              ))
-            ) : (
-              <div className='image-slider'>
-                <p className="no-images-message">No images available</p>
-              </div>
-            )}
-          </div>
-          <button 
-            className={`arrow right ${currentSlide >= images.length - maxVisibleImages ? 'disabled' : ''}`}
-            onClick={handleNextSlide}
-            disabled={currentSlide >= images.length - maxVisibleImages}
-          >
-            &#9654;
-          </button>
-        </div>
-      </div>
+            </div>
 
-      {modalImage && (
-        <ImageModal 
-          src={modalImage} 
-          alt="Selected Image" 
-          onClose={handleCloseModal} 
-        />
-      )}
-    </div>
-  );
+            <div className="right-container">
+                <RightTable chosenRow={chosenRow} />
+                <div className="image-slider-container">
+                    <button
+                        className={`arrow left ${currentSlide === 0 ? 'disabled' : ''}`}
+                        onClick={handlePrevSlide}
+                        disabled={currentSlide === 0}
+                    >
+                        &#9664;
+                    </button>
+                    <div className="image-slider" ref={sliderRef}>
+                        {images.length > 0 ? (
+                            images.map((imgSrc, index) => (
+                                <LazyImage
+                                    key={index}
+                                    src={imgSrc}
+                                    alt={`Slide ${index + 1}`}
+                                    onClick={() => handleImageClick(imgSrc)}
+                                />
+                            ))
+                        ) : (
+                            <div className='image-slider'>
+                                <p className="no-images-message">No images available</p>
+                            </div>
+                        )}
+                    </div>
+                    <button
+                        className={`arrow right ${currentSlide >= images.length - maxVisibleImages ? 'disabled' : ''}`}
+                        onClick={handleNextSlide}
+                        disabled={currentSlide >= images.length - maxVisibleImages}
+                    >
+                        &#9654;
+                    </button>
+                </div>
+            </div>
+
+            {modalImage && (
+                <ImageModal
+                    src={modalImage}
+                    alt="Selected Image"
+                    onClose={handleCloseModal}
+                />
+            )}
+        </div>
+    );
 }
 
 export default Content;
