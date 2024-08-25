@@ -57,19 +57,6 @@ body, html {
   margin-bottom: 20px;
 }
 
-/* Server Information Container */
-.server-information-container {
-  border: 2px solid var(--color-border);
-  background: var(--color-background-gradient);
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-  height: 70px;
-  max-height: 200px;
-  border-radius: 5px;
-  box-shadow: 0 0 15px var(--color-box-shadow);
-}
-
 /* Typography */
 p {
   text-align: center;
