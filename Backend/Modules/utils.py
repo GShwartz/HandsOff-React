@@ -5,56 +5,76 @@ import os
 
 
 class Handlers:
-    def __init__(self,  log_path, app_path):
+    def __init__(self,  log_path, main_path):
         self.log_path = log_path
-        self.app_path = app_path
+        self.main_path = main_path
         self.logger = init_logger(self.log_path, __name__)
 
     def handle_local_dir(self, matching_endpoint):
-        self.ident_path = os.path.join(self.app_path, matching_endpoint.ident)
-        paths = [f"{self.ident_path}", "images", "tasks", "sysinfo"]
+        self.ident_path = os.path.join(self.main_path, matching_endpoint.ident)
+        self.logger.debug(f"Ident Path: {self.ident_path}")
+
+        paths = ["images"]
         if not os.path.isdir(self.ident_path):
+            self.logger.info(f"Directory '{self.ident_path}' does not exist.")
+
+            try:
+                self.logger.debug(f"Creating Directory '{self.ident_path}'...")
+                os.makedirs(self.ident_path, exist_ok=True)
+                self.logger.debug(f"Directory '{self.ident_path}' created successfully.")
+
+            except Exception as e:
+                self.logger.error(f"Error creating {self.ident_path}. {e}")
+
             for path in paths:
-                try:
-                    os.makedirs(str(path), exist_ok=True)
+                sub_dir_path = os.path.join(self.ident_path, path)
+                self.logger.debug(f"Subdir path: {sub_dir_path}")
 
-                except Exception as e:
-                    print(f"Failed to create directory '{self.local_dir}': {e}")
-                    sys.exit(1)
+                if not os.path.isdir(sub_dir_path):
+                    self.logger.debug(f"Subdir path '{sub_dir_path}' does not exist.")
 
+                    try:
+                        self.logger.debug(f"Creating Subdir '{sub_dir_path}'...")
+                        os.makedirs(sub_dir_path, exist_ok=True)
+                        self.logger.debug(f"Successfully created subdir '{sub_dir_path}'.")
+
+                    except Exception as e:
+                        self.logger.error(f"Failed to create subdir '{sub_dir_path}': {e}")
+                        sys.exit(1)
+        
         return self.ident_path
 
     def clear_local(self, matching_endpoint):
+        self.logger.info(f"Running 'clear_local'...")
+        
         def remove_files_from_path(path):
             if os.path.isdir(path):
                 for file_name in os.listdir(path):
                     file_path = os.path.join(path, file_name)
-                    self.remove_file(file_path)
+                    if os.path.islink(file_path):
+                        # Remove symbolic link
+                        self.logger.debug(f"Removing symbolic link '{file_path}'...")
+                        os.unlink(file_path)
+                        self.logger.debug(f"'{file_path}' removed successfully.")
+
+                    elif os.path.isdir(file_path):
+                        # Recursively handle the subdirectory but do not remove it
+                        remove_files_from_path(file_path)
+
+                    else:
+                        # Remove the file
+                        self.logger.debug(f"Removing file '{file_path}'...")
+                        self.remove_file(file_path)
+                        self.logger.debug(f"File '{file_path}' removed successfully.")
+
                 return True
+            
             return False
 
-        path = os.path.join('static', 'images', matching_endpoint.ident)
+        path = os.path.join(self.main_path, matching_endpoint.ident)
+        self.logger.debug(f"Clear path: {path}")
+        
         if remove_files_from_path(path):
             return True
 
         return False
-
-    def remove_file(self, file_path):
-        if platform.system() == 'Windows':
-            try:
-                os.remove(file_path)
-
-            except OSError as e:
-                print(f"Error deleting file: {e}")
-                return False
-
-        elif platform.system() == 'Linux' or platform.system() == 'Darwin':
-            try:
-                os.unlink(file_path)
-
-            except OSError as e:
-                print(f"Error deleting file: {e}")
-                return False
-        else:
-            print("Unsupported platform")
-            return False

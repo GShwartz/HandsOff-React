@@ -30,13 +30,14 @@ class Commands:
         self.log_path = log_path
         self.endpoint = endpoint
         self.remove_connection = remove_connection
+        self.shell_target = None
 
         self.logger = init_logger(self.log_path, __name__)
 
     def call_screenshot(self, matching_endpoint):
         self.logger.debug("Initializing Screenshot class...")
-        sc = Screenshot(self.main_path, self.log_path, matching_endpoint,
-                        self.remove_connection, matching_endpoint.conn)
+        sc = Screenshot(path=self.main_path, log_path=self.log_path, endpoint=matching_endpoint,
+                        remove_connection=self.remove_connection, shell_target=matching_endpoint.conn)
         if sc.run():
             return True
 
