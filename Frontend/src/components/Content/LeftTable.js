@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import ActionDropdown from './ActionDropdown';
 
-const LeftTable = ({ endpoints, chosenRow, setChosenRow, handleRowClick, handleCheckboxChange, isRowChecked, handleSelectAllChange, selectAllChecked }) => {
+const LeftTable = ({
+  endpoints,
+  chosenRow,
+  setChosenRow,
+  handleRowClick,
+  handleCheckboxChange,
+  isRowChecked,
+  handleSelectAllChange,
+  selectAllChecked,
+  refreshImages // Add refreshImages as a prop
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
@@ -55,6 +65,7 @@ const LeftTable = ({ endpoints, chosenRow, setChosenRow, handleRowClick, handleC
                 chosenRow={chosenRow} 
                 setChosenRow={setChosenRow} 
                 onDropdownToggle={setIsDropdownOpen} // Pass function to handle dropdown toggle
+                refreshImages={refreshImages} // Pass refreshImages to ActionDropdown
               />
             </td>
           </tr>
