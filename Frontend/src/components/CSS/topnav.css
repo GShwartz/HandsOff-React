@@ -1,16 +1,22 @@
+/* Define CSS variables for colors */
+:root {
+    --font-family: 'Roboto', sans-serif; /* Unified font for the app */
+}
+
 /* Topnav Container */
 .navbar {
     display: flex;
     justify-content: space-between; /* Ensure space between logo and nav items */
     align-items: center;
     padding: 10px 10px;
-    background: linear-gradient(180deg, #4e4a4a 0%, #817f7f 50%); /* Match background gradient */
-    border-bottom: 2px solid #6f806f; /* Consistent border color */
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    background: linear-gradient(180deg, #343638 0%, #3f4144 50%); /* Match background gradient */
+    border-bottom: 2px solid #4b5157; /* Consistent border color */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
     border-radius: 5px; /* Rounded corners to match other containers */
     margin-bottom: 5px; /* Add space below the topnav */
     width: 100%;
     box-sizing: border-box;
+    font-family: var(--font-family);
 }
 
 /* Logo Styling */
@@ -37,14 +43,14 @@
 /* Navigation Links */
 .nav-link {
     text-decoration: none;
-    color: #b2cdd8; /* Match text color in other parts of the app */
+    color: #9aa2a8; /* Match text color in other parts of the app */
     font-weight: bold;
     font-size: 14px; /* Ensure font size is readable */
 }
 
 /* Logout Button */
 .logout-button {
-    background-color: #dc3545;
+    background-color: #d32f2f;
     border: none;
     color: white;
     padding: 8px 16px;
@@ -56,5 +62,5 @@
 
 /* Logout Button Hover Effect */
 .logout-button:hover {
-    background-color: #c82333;
+    background-color: #920909;
 }

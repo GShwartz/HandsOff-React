@@ -1,17 +1,18 @@
 /* Define CSS variables for colors */
 :root {
-  --color-background-body: #f5f5f5;
-  --color-text-body: #333;
-  --color-background-app: #121022ce;
-  --color-box-shadow: rgba(0, 0, 0, 0.1);
-  --color-border: #6f806f;
-  --color-background-gradient: linear-gradient(180deg, #4e4a4a 0%, #817f7f 50%);
-  --color-text-paragraph: #444;
-  --color-text-muted: #777;
-  --color-link: #1a73e8;
-  --color-link-hover: #1a73e8;
-  --color-button-primary: #1a73e8;
-  --color-button-primary-hover: #155db2;
+  --font-family: 'Roboto', sans-serif; /* Unified font for the app */
+  --color-background-body: #181a1b;
+  --color-text-body: #e0e0e0;
+  --color-background-app: #202225;
+  --color-box-shadow: rgba(0, 0, 0, 0.3);
+  --color-border: #4b5157;
+  --color-background-gradient: linear-gradient(180deg, #343638 0%, #3f4144 50%);
+  --color-text-paragraph: #9aa2a8;
+  --color-text-muted: #6c757d;
+  --color-link: #82aaff;
+  --color-link-hover: #b0bec5;
+  --color-button-primary: #2196f3;
+  --color-button-primary-hover: #1e88e5;
 }
 
 /* General Reset and Base Styles */
@@ -24,7 +25,7 @@
 body, html {
   width: 100%;
   height: 100%;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--font-family);
   background-color: var(--color-background-body);
   color: var(--color-text-body);
   overflow-x: hidden;
@@ -118,6 +119,7 @@ a:hover {
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: var(--font-family);
 }
 
 .btn-primary {

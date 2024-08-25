@@ -1,21 +1,22 @@
 /* Define CSS variables for colors */
 :root {
-    --color-table-background: linear-gradient(135deg, #f3f3f3 0%, #e9e9e9 100%);
-    --color-table-text: #333;
-    --color-table-border: #ddd;
-    --color-header-background: #52585a;
-    --color-header-text: #ffffff;
-    --color-row-even: #f9f9f9;
-    --color-row-highlight: #2ca855;
-    --color-row-highlight-text: #ffffff;
-    --color-hover-background: #aec2b4;
-    --color-action-button-background: #007bff;
-    --color-action-button-hover: #0056b3;
-    --color-dropdown-background: linear-gradient(135deg, rgba(111, 123, 128, 0.8), rgba(68, 68, 68, 0.8));
-    --color-dropdown-shadow: rgba(0, 0, 0, 0.3);
-    --color-dropdown-text: #ffffff;
-    --color-dropdown-hover-background: #aec2b4;
-    --color-dropdown-hover-text: #ffffff;
+    --font-family: 'Roboto', sans-serif; /* Unified font for the app */
+    --color-table-background: #121212; /* Deep black background */
+    --color-table-text: #d4d4d4; /* Light grey font */
+    --color-table-border: #2c2c2c; /* Dark grey for borders */
+    --color-header-background: #1f1f1f; /* Dark grey for table header */
+    --color-header-text: #f0f0f0; /* Almost white for header text */
+    --color-row-even: rgba(255, 255, 255, 0.08); /* Very subtle white transparency for even rows */
+    --color-row-highlight: #449434; /* Darker grey for highlight */
+    --color-row-highlight-text: #ffffff; /* Pure white for highlighted text */
+    --color-hover-background: #333333; /* Medium grey hover effect */
+    --color-action-button-background: #1f1f1f; /* Dark grey for action buttons */
+    --color-action-button-hover: #3a3a3a; /* Medium grey on hover */
+    --color-dropdown-background: #1f1f1f; /* Dark dropdown background */
+    --color-dropdown-shadow: rgba(0, 0, 0, 0.8); /* Deep shadow for dropdown */
+    --color-dropdown-text: #d4d4d4; /* Light grey text */
+    --color-dropdown-hover-background: #2b2b2b; /* Slightly lighter grey on hover */
+    --color-dropdown-hover-text: #e8e8e8; /* Brighter grey on hover */
 }
 
 /* General table styles */
@@ -23,7 +24,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin: 5px 0 10px;
-    font-family: 'Arial', sans-serif;
+    font-family: var(--font-family);
     font-size: 12px;
     background: var(--color-table-background);
     border-radius: 2px;
@@ -99,6 +100,7 @@ th:last-child, td:last-child {
     cursor: pointer;
     font-size: 0.9rem;
     transition: background-color 0.3s ease;
+    font-family: var(--font-family);
 }
 
 .action-button:hover,
@@ -141,7 +143,7 @@ th:last-child, td:last-child {
     display: block;
     text-align: center;
     font-size: 0.95rem;
-    font-family: 'Arial', sans-serif;
+    font-family: var(--font-family);
     transition: background 0.3s ease, color 0.3s ease;
     z-index: 10;
 }

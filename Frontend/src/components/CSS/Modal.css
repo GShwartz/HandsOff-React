@@ -1,91 +1,92 @@
 :root {
-    --modal-overlay-bg: rgba(0, 0, 0, 0.8);
-    --modal-content-bg: #ffffff;
-    --modal-border-radius: 10px;
-    --modal-padding: 20px;
-    --modal-close-btn-size: 2rem;
-    --modal-close-btn-color: #333;
-    --modal-close-btn-hover-color: #000;
-    --modal-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    --modal-transition: all 0.3s ease-in-out;
-    --modal-image-max-width: 100%;
-    --modal-image-max-height: 80vh;
-    --modal-overlay-z-index: 1000;
-    --modal-close-btn-right-offset: 0px; /* Add a negative offset to move the button to the right */
-  }
-  
-  /* Modal overlay */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--modal-overlay-bg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: var(--modal-overlay-z-index);
-    opacity: 0;
-    animation: fadeIn 0.3s forwards; /* Fade-in animation */
-  }
-  
-  /* Modal content */
-  .modal-content {
-    position: relative;
-    background: var(--modal-content-bg);
-    padding: var(--modal-padding);
-    border-radius: var(--modal-border-radius);
-    max-width: 90%;
-    max-height: 90%;
-    overflow: hidden;
-    box-shadow: var(--modal-shadow);
-    transform: scale(0.8); /* Start with smaller scale for animation */
-    animation: scaleUp 0.3s forwards; /* Scale-up animation */
-  }
-  
-  /* Modal image */
-  .modal-image {
-    max-width: var(--modal-image-max-width);
-    max-height: var(--modal-image-max-height);
-    border-radius: var(--modal-border-radius);
-  }
-  
-  /* Close button */
-  .modal-close {
-    position: absolute;
-    top: 10px;
-    right: var(--modal-close-btn-right-offset); /* Move the button more to the right */
-    background: none;
-    border: none;
-    font-size: var(--modal-close-btn-size);
-    color: var(--modal-close-btn-color);
-    cursor: pointer;
-    transition: var(--modal-transition);
-  }
-  
-  .modal-close:hover {
-    color: var(--modal-close-btn-hover-color);
-    transform: scale(1.2); /* Slight scale-up on hover to emphasize interaction */
-  }
-  
-  /* Fade-in animation for the overlay */
-  @keyframes fadeIn {
-    from {
+  --font-family: 'Roboto', sans-serif; /* Unified font for the app */
+  --modal-overlay-bg: rgba(0, 0, 0, 0.8);
+  --modal-content-bg: #2e2d2d;
+  --modal-border-radius: 10px;
+  --modal-padding: 20px;
+  --modal-close-btn-size: 2rem;
+  --modal-close-btn-color: #e9e3e3;
+  --modal-close-btn-hover-color: #615e5e;
+  --modal-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --modal-transition: all 0.3s ease-in-out;
+  --modal-image-max-width: 100%;
+  --modal-image-max-height: 80vh;
+  --modal-overlay-z-index: 1000;
+  --modal-close-btn-right-offset: 0px; /* Add a negative offset to move the button to the right */
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--modal-overlay-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--modal-overlay-z-index);
+  opacity: 0;
+  animation: fadeIn 0.3s forwards; /* Fade-in animation */
+}
+
+/* Modal content */
+.modal-content {
+  position: relative;
+  background: var(--modal-content-bg);
+  padding: var(--modal-padding);
+  border-radius: var(--modal-border-radius);
+  max-width: 90%;
+  max-height: 90%;
+  overflow: hidden;
+  box-shadow: var(--modal-shadow);
+  transform: scale(0.8); /* Start with smaller scale for animation */
+  animation: scaleUp 0.3s forwards; /* Scale-up animation */
+  font-family: var(--font-family);
+}
+
+/* Modal image */
+.modal-image {
+  max-width: var(--modal-image-max-width);
+  max-height: var(--modal-image-max-height);
+  border-radius: var(--modal-border-radius);
+}
+
+/* Close button */
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: var(--modal-close-btn-right-offset); /* Move the button more to the right */
+  background: none;
+  border: none;
+  font-size: var(--modal-close-btn-size);
+  color: var(--modal-close-btn-color);
+  cursor: pointer;
+  transition: var(--modal-transition);
+}
+
+.modal-close:hover {
+  color: var(--modal-close-btn-hover-color);
+  transform: scale(1.2); /* Slight scale-up on hover to emphasize interaction */
+}
+
+/* Fade-in animation for the overlay */
+@keyframes fadeIn {
+  from {
       opacity: 0;
-    }
-    to {
+  }
+  to {
       opacity: 1;
-    }
   }
-  
-  /* Scale-up animation for the modal content */
-  @keyframes scaleUp {
-    from {
+}
+
+/* Scale-up animation for the modal content */
+@keyframes scaleUp {
+  from {
       transform: scale(0.8);
-    }
-    to {
-      transform: scale(1);
-    }
   }
-  
+  to {
+      transform: scale(1);
+  }
+}
