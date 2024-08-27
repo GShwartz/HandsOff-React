@@ -15,7 +15,7 @@ def init_logger(log_path, name):
         if not logger.handlers:
             logger.setLevel(logging.DEBUG)
             logger.propagate = False
-            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            formatter = logging.Formatter('%(asctime)s - %(name)s - %(funcName)s - %(levelname)s: %(message)s')
 
             if not os.path.isfile(log_path):
                 open(log_path, 'w').close()  # Create an empty log file if it doesn't exist

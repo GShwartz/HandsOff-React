@@ -3,8 +3,8 @@ import shutil
 import glob
 import os
 
-from Modules.logger import init_logger
-from Modules.utils import Handlers
+from .logger import init_logger
+from .utils import Handlers
 
 class Screenshot:
     def __init__(self, path, log_path, endpoint, remove_connection, shell_target):

@@ -1,19 +1,6 @@
-"""
-    HandsOff
-    A C&C for IT Admins
-    Copyright (C) 2023 Gil Shwartz
-
-    This work is licensed under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    You should have received a copy of the GNU General Public License along with this work.
-    If not, see <https://www.gnu.org/licenses/>.
-"""
-
-from Modules.logger import init_logger
-from Modules.commands import Commands
-from Modules.utils import Handlers
+from .logger import init_logger
+from .commands import Commands
+from .utils import Handlers
 import subprocess
 import threading
 import platform

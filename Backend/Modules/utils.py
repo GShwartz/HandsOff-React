@@ -1,14 +1,14 @@
-from Modules.logger import init_logger
+from .logger import init_logger
 import platform
 import sys
 import os
 
-
 class Handlers:
-    def __init__(self,  log_path, main_path):
+    def __init__(self,  log_path=None, main_path=None):
         self.log_path = log_path
         self.main_path = main_path
-        self.logger = init_logger(self.log_path, __name__)
+        if self.log_path:
+            self.logger = init_logger(self.log_path, __name__)
 
     def handle_local_dir(self, matching_endpoint):
         self.ident_path = os.path.join(self.main_path, matching_endpoint.ident)
@@ -78,3 +78,17 @@ class Handlers:
             return True
 
         return False
+
+    def check_platform(self):
+        if platform.system() == 'Windows':
+            self.main_path = self.main_path.replace('/', '\\')
+            self.log_path = os.path.join(self.main_path, os.getenv('LOG_FILE'))
+            return self.main_path, self.log_path
+
+        elif platform.system() == 'Linux':
+            self.log_path = os.path.join(self.main_path, os.getenv('LOG_FILE'))
+            return self.main_path, self.log_path
+
+        else:
+            self.logger.error(f"Unsupported operating system.")
+            sys.exit(1)

@@ -1,30 +1,17 @@
-"""
-    HandsOff
-    A C&C for IT Admins
-    Copyright (C) 2023 Gil Shwartz
-
-    This work is licensed under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    You should have received a copy of the GNU General Public License along with this work.
-    If not, see <https://www.gnu.org/licenses/>.
-"""
-
-from Modules.logger import init_logger
+from .logger import init_logger
 from dotenv import load_dotenv
 from datetime import datetime
 from threading import Thread
-import dotenv
 import socket
 import json
-import time
 import os
 
+# PostgreSQL DB imports
 import psycopg2
 from psycopg2 import OperationalError
 
 
+# Presentation Class
 class Endpoints:
     def __init__(self, conn, client_mac, ip, ident, user,
                  client_version, os_release, boot_time, connection_time,
@@ -44,12 +31,11 @@ class Endpoints:
         self.os_release = os_release
         self.connection_time = connection_time
 
-    # def __repr__(self):
-    #     return f"Endpoint({self.conn}, {self.client_mac}, " \
-    #            f"{self.ip}, {self.ident}, {self.user}, " \
-    #            f"{self.client_version}, {self.os_release}, {self.boot_time}, " \
-    #            f"{self.connection_time}, {self.is_vm}, {self.hardware}, " \
-    #            f"{self.hdd}, {self.external_ip}, {self.wifi})"
+    def __str__(self):
+        return f"Endpoints(conn={self.conn}, client_mac={self.client_mac}, ident={self.ident}, ip={self.ip}, user={self.user})"
+
+    def __repr__(self):
+        return f"Endpoints(conn={self.conn}, client_mac={self.client_mac}, ident={self.ident}, ip={self.ip}, user={self.user})"
     
     def to_dict(self):
         return {
@@ -113,6 +99,13 @@ class Server:
 
         self.connect_to_db()
 
+    def __str__(self):
+        return f"Server(ip={self.serverIP}, port={self.port}, hostname={self.hostname})"
+
+    def __repr__(self):
+        return (f"Server(ip={self.serverIP}, port={self.port}, hostname={self.hostname}, "
+                f"user={self.user}, endpoints={len(self.endpoints)})")
+    
     def connect_to_db(self):
         self.logger.debug("Connecting to database...")
         try:
@@ -204,7 +197,6 @@ class Server:
             self.logger.error(e)
             is_vm_value = "N/A"
 
-        self.logger.debug("Compiling endpoint repr...")
         self.fresh_endpoint = Endpoints(
             self.conn, self.handshake['mac_address'], self.ip,
             self.handshake['hostname'], self.handshake['current_user'],
@@ -220,7 +212,7 @@ class Server:
             self.logger.debug(f'{self.fresh_endpoint} not in endpoints list.')
             self.endpoints.append(self.fresh_endpoint)
 
-        self.logger.debug(f"Total Endpoints: {self.endpoints}")
+        self.logger.debug(f"Total Endpoints: {len(self.endpoints)}")
         self.logger.debug(f'Updating connection history dict...')
         self.connHistory.update({self.fresh_endpoint: self.dt})
         self.logger.info(f'Connection history updated with: {self.fresh_endpoint}:{self.dt}')
@@ -228,7 +220,7 @@ class Server:
         self.insert_into_db()
 
     def insert_into_db(self) -> None:
-        self.logger.debug(f'Inserting endpoint data into the database...')
+        self.logger.debug(f'Updating database...')
         try:
             insert_query = """
             INSERT INTO endpoints (
@@ -321,7 +313,7 @@ class Server:
             endpoint.conn.close()
             self.endpoints.remove(endpoint)
 
-            self.logger.info(f'=== End of remove_lost_connection({endpoint}) ===')
+            self.logger.info(f'=== Connection to {endpoint.ip} removed. ===')
             return True
 
         except (ValueError, RuntimeError) as e:
