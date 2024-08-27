@@ -14,8 +14,15 @@
   --color-dropdown-background: #1f1f1f; /* Dark dropdown background */
   --color-dropdown-shadow: rgba(0, 0, 0, 0.8); /* Deep shadow for dropdown */
   --color-dropdown-text: #d4d4d4; /* Light grey text */
-  --color-dropdown-hover-background: #2b2b2b; /* Slightly lighter grey on hover */
+  --color-dropdown-hover-background: #356163; /* Slightly lighter grey on hover */
   --color-dropdown-hover-text: #e8e8e8; /* Brighter grey on hover */
+  --color-slider-background: var(--color-dropdown-background); /* Use the dropdown background for slider */
+  --color-slider-font: var(--color-header-text); /* Use header text color for slider font */
+  --color-slider-arrow: #f0f0f0; /* Use header text color for arrow */
+  --color-modal-background: #121212; /* Use table background color for modal */
+  --color-modal-text: #d4d4d4; /* Use table text color for modal text */
+  --color-modal-shadow: rgba(0, 0, 0, 0.8); /* Shadow for modal */
+  --color-modal-backdrop: rgba(0, 0, 0, 0.5); /* Backdrop for modal */
 }
 
 /* Base content container */
@@ -29,8 +36,8 @@
 /* Left container */
 .left-container {
   flex: 2;
-  border: 2px solid var(--color-table-border); /* Consistent border color */
-  background: var(--color-table-background); /* Dark background to match the right container */
+  border: 2px solid var(--color-table-border);
+  background: var(--color-table-background);
   margin-right: 20px;
   padding: 10px;
   display: flex;
@@ -38,35 +45,35 @@
   height: 500px;
   max-height: 500px;
   border-radius: 5px;
-  box-shadow: 0 0 20px var(--color-dropdown-shadow); /* Slightly deeper shadow to match the right container */
-  overflow-y: auto; /* Allow vertical scrolling */
+  box-shadow: 0 0 20px var(--color-dropdown-shadow);
+  overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 20px; /* Add padding to leave space for the scrollbar */
-  color: var(--color-table-text); /* Set the font color to match the right container */
+  padding-right: 20px;
+  color: var(--color-table-text);
 }
 
 /* Right container */
 .right-container {
   flex: 3.2;
   border: 2px solid var(--color-table-border);
-  background: var(--color-table-background); /* Enhanced dark background */
+  background: var(--color-table-background);
   border-radius: 5px;
-  box-shadow: 0 0 20px var(--color-dropdown-shadow); /* Slightly deeper shadow */
+  box-shadow: 0 0 20px var(--color-dropdown-shadow);
   overflow-y: auto;
   overflow-x: hidden;
-  position: relative; /* Required for positioning arrows */
-  padding-right: 20px; /* Add padding to leave space for the scrollbar */
-  color: var(--color-table-text); /* Set the font color */
+  position: relative;
+  padding-right: 20px;
+  color: var(--color-table-text);
 }
 
 .connected-stations-table-right {
-  width: 95%; /* Adjust the width to be slightly smaller */
-  margin: 5px auto; /* Center the table within the container */
+  width: 95%;
+  margin: 5px auto;
   border-collapse: collapse;
   font-family: 'Arial', sans-serif;
-  font-size: 14px; /* Slightly larger font for better readability */
-  color: var(--color-table-text); /* Set font color to light grey */
-  text-align: center; /* Center the text in the table */
+  font-size: 14px;
+  color: var(--color-table-text);
+  text-align: center;
 }
 
 /* Add styles for the new button */
@@ -77,12 +84,12 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem; /* Adjust size as needed */
+  font-size: 1rem;
   transition: background-color 0.3s ease;
   font-family: var(--font-family);
-  width: 100%; /* Ensure it fits within the table cell */
-  text-align: center; /* Center align the text inside */
-  box-shadow: 0 0 10px var(--color-dropdown-shadow); /* Add subtle shadow */
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 0 10px var(--color-dropdown-shadow);
 }
 
 .expand-button:hover {
@@ -91,35 +98,35 @@
 
 .right-table-container {
   margin-top: 10px;
-  padding-right: 10px; /* Adjust padding as needed */
+  padding-right: 10px;
 }
 
 /* Table header */
 .connected-stations-table-right th {
-  background-color: var(--color-header-background); /* Enhanced darker header background */
-  color: var(--color-header-text); /* Use the header font color */
-  padding: 12px 15px; /* Increase padding for better spacing */
-  text-align: center; /* Center text in header */
-  border-bottom: 2px solid var(--color-table-border); /* Add a bottom border */
+  background-color: var(--color-header-background);
+  color: var(--color-header-text);
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 2px solid var(--color-table-border);
 }
 
 /* Table rows */
 .connected-stations-table-right td {
-  padding: 10px 15px; /* Adjust padding for consistency */
-  border-bottom: 1px solid var(--color-table-border); /* Subtle border between rows */
-  background-color: transparent; /* Ensure rows have a transparent background */
-  color: var(--color-table-text); /* Set font color to light grey */
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--color-table-border);
+  background-color: transparent;
+  color: var(--color-table-text);
 }
 
 /* No hover effect on table rows */
 .connected-stations-table-right tr:hover {
-  background-color: transparent; /* Disable hover effect */
+  background-color: transparent;
 }
 
 /* Updated styling for the image slider */
 .image-slider-container {
   margin-top: 20px;
-  background: var(--color-dropdown-background); /* Use the slider background color */
+  background: var(--color-slider-background);
   border-radius: 10px;
   box-shadow: 0 0 15px var(--color-dropdown-shadow);
   position: relative;
@@ -132,27 +139,27 @@
   display: flex;
   justify-content: left;
   align-items: center;
-  height: 100%; /* Make sure the slider takes full height */
-  transition: transform 0.5s ease-in-out; /* Smooth sliding transition */
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
 }
 
 .image-slider img {
-  max-height: 150px; /* Adjust height as needed */
+  max-height: 150px;
   max-width: 300px;
-  margin: 0 10px; /* Space between images */
+  margin: 0 10px;
   border-radius: 10px;
   box-shadow: 0 0 10px var(--color-dropdown-shadow);
-  flex-shrink: 0; /* Prevent images from shrinking */
+  flex-shrink: 0;
 }
 
 .image-slider img:hover {
-  transform: scale(1.05); /* Slightly enlarge the image */
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Add a deeper shadow on hover */
-  filter: brightness(1.1); /* Increase brightness slightly */
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  filter: brightness(1.1);
 }
 
 .no-images-message {
-  font-size: 16px;  /* Adjust the font size as needed */
+  font-size: 16px;
   height: 150px;
   color: var(--color-slider-font);
   margin-left: 50vh;
@@ -167,13 +174,17 @@
   width: 40px;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.7);
   color: var(--color-slider-arrow);
   border: none;
   padding: 10px;
   cursor: pointer;
   z-index: 5;
-  transition: background-color 0.3s ease; /* Smooth transition on hover */
+  transition: background-color 0.3s ease;
+}
+
+.arrow:active {
+  transform: translateY(-50%) scale(0.9);
 }
 
 .arrow.left {
@@ -185,11 +196,13 @@
 }
 
 .arrow:hover {
-  background-color: rgba(0, 0, 0, 0.7); /* Darken on hover */
+  background-color: rgba(255, 255, 255, 0.548);
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .arrow.disabled {
   opacity: 0.5;
+  color: rgba(0, 0, 0, 0.8);
   pointer-events: none;
 }
 
@@ -222,14 +235,14 @@
   opacity: 0;
   background-color: var(--color-dropdown-background);
   border-radius: 5px;
-  box-shadow: 0 10px 30px var(--color-dropdown-shadow); /* Deeper shadow for more depth */
-  z-index: 999; /* Ensure it appears on top of other elements */
+  box-shadow: 0 10px 30px var(--color-dropdown-shadow);
+  z-index: 999;
   list-style-type: none;
   padding: 12px 0;
   margin: 0;
   top: 0;
-  left: -100%;  /* Position the dropdown to the left of the action button */
-  transform: translateX(-10px); /* Offset the dropdown slightly to the left */
+  left: -100%;
+  transform: translateX(-10px);
   transition: visibility 0.3s, opacity 0.3s ease, transform 0.3s ease;
 }
 
@@ -242,7 +255,7 @@
 .dropdown-item {
   background: none;
   border: none;
-  padding: 12px 20px; /* Increase padding for better spacing */
+  padding: 12px 20px;
   text-align: center;
   display: block;
   width: 100%;
@@ -250,18 +263,18 @@
   color: var(--color-dropdown-text);
   font-size: 0.95rem;
   font-family: 'Arial', sans-serif;
-  transition: background 0.2s ease-in, color 0.2s ease-in; /* Faster, smoother transitions */
+  transition: background 0.2s ease-in, color 0.2s ease-in;
 }
 
 .dropdown-item:hover,
 .dropdown-item:focus {
   background: var(--color-dropdown-hover-background);
   color: var(--color-dropdown-hover-text);
-  outline: none; /* Remove default focus outline */
+  outline: none;
 }
 
 .dropdown-item:focus {
-  outline: 2px solid var(--color-slider-arrow); /* Visible outline for focus */
+  outline: 2px solid var(--color-slider-arrow);
 }
 
 .no-selection-message {
@@ -281,7 +294,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-modal-backdrop);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -289,11 +302,11 @@
 }
 
 .modal {
-  background: #121212;
-  color: #d4d4d4;
+  background: var(--color-modal-background);
+  color: var(--color-modal-text);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 2px 10px var(--color-modal-shadow);
 }
 
 /* Mobile Responsiveness */
@@ -302,10 +315,10 @@
       left: 0;
       right: 0;
       width: 100%;
-      transform: translateX(0); /* Center it */
+      transform: translateX(0);
   }
 
   .dropdown-item {
-      padding: 12px 20px; /* Increase touch target size for mobile */
+      padding: 12px 20px;
   }
 }
